@@ -12,16 +12,20 @@ import { app, server } from "./lib/socket.js";
 
 dotenv.config();
 
+app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:3000",
-  "http://172.18.96.1:3000", // Add this IP address
+  "http://172.18.96.1:3000",
+  "https://goop-vert.vercel.app", 
+  "https://goop-haris-projects-512fafb0.vercel.app",// Add your Vercel domain
 ];
 
 app.use(cookieParser());
 app.use(
   cors({
-    origin: allowedOrigins, // Add this IP address
+    origin: allowedOrigins,
     credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
 
