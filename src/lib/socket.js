@@ -9,13 +9,18 @@ const server = http.createServer(app);
 // This is why we pass server to new Server(server, {...}), allowing:
 // HTTP requests to be handled by Express (app).
 // WebSocket connections to be handled by Socket.io.
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://172.18.96.1:3000",
+  "https://goop-vert.vercel.app",
+  "https://goop-haris-projects-512fafb0.vercel.app", // Add your Vercel domain
+];
 
 const io = new Server(server, {
   cors: {
-    origin: [
-      "http://localhost:3000",
-      "http://172.18.96.1:3000", // Add this IP address
-    ],
+    origin: allowedOrigins,
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   },
 });
 
