@@ -20,8 +20,10 @@ const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
     credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   },
+  allowEIO3: true, // Helps with compatibility
+  transports: ["websocket", "polling"], // Explicitly define the transports to match client
 });
 
 export function getReceiverSocketId(userId) {
@@ -40,6 +42,11 @@ io.on("connection", (socket) => {
 
   // io.emit() is used to send events to all the connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+  // Debug connection
+  socket.on("error", (error) => {
+    console.log("Socket error:", error);
+  });
 
   socket.on("disconnect", () => {
     console.log("A user disconnected", socket.id);
