@@ -12,20 +12,26 @@ import { app, server } from "./lib/socket.js";
 
 dotenv.config();
 
-app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:3000",
   "http://172.18.96.1:3000",
   "https://goop-vert.vercel.app",
-  "https://goop-haris-projects-512fafb0.vercel.app", // Add your Vercel domain
+  "https://goop-haris-projects-512fafb0.vercel.app",
 ];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "50mb" })); // Increase JSON limit to 50MB
 app.use(express.urlencoded({ extended: true, limit: "50mb" })); // Increase URL-encoded limit
